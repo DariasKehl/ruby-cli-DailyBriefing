@@ -1,6 +1,5 @@
 class DailyBriefing::CLI
-      #@location = ZIP
-    # Just kidding - that's a fucking secret; apparently. 
+   
     @@location = "00501"
     @@input = ""
 
