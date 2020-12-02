@@ -8,6 +8,6 @@ require 'httparty'
 require_relative './cli'
 require_relative './api_handler'
 require_relative './weatherObject'
-require_relative './forecastObject'
+#require_relative './forecastObject'
 require_relative './version'
 

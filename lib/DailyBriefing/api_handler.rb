@@ -5,10 +5,8 @@
 # -- key:  ffe7cb9143aff0778bf7788d0d2a3042
 
 class DailyBriefing::APIHandler
-    attr_accessor :location, :location_name, :condition, :response_code, :report_time, :temp, :tMin, :tMax, :lat, :lon,
-     :gndPres, :windDir, :windSpd, :sunUp, :sunDown, :hr24_dt, :hr24_2_dt, :hr48_dt, :hr48_2_dt, :hr72_dt, :temp24, :temp24_2, 
-     :temp48, :temp48_2, :temp72, :con24, :con24_2, :con48, :con48_2
-
+    #attr_accessor :location
+    
     def initialize(inputLocation)
         @location = inputLocation
     end
@@ -16,56 +14,64 @@ class DailyBriefing::APIHandler
   def self.getWeatherDataByLocation(inputLocation) # receives location, sneds back weather object
     response = HTTParty.get("https://api.openweathermap.org/data/2.5/weather?zip=#{inputLocation}&appid=ffe7cb9143aff0778bf7788d0d2a3042&units=metric")
     parsed = response.parsed_response
-    @current = self.new(inputLocation)
+    #@current = self.new(inputLocation)
     #puts parsed
-    @current.response_code = parsed["cod"]
+    response_code = parsed["cod"]
 
     # Check for invalid entry
-    if @current.response_code === "404"
+    if response_code === "404"
       puts "\n\nInvalid location, please enter a valid location.\n\n"
       return
     else
       # Assign attributes to current weather object
-      @current.location_name = parsed["name"]
-      @current.report_time = Time.at(parsed["dt"])
-      @current.temp = parsed["main"]["temp"]
-      @current.lat = parsed["coord"]["lat"]
-      @current.lon = parsed["coord"]["lon"]
-      @current.tMin = parsed["main"]["temp_min"]
-      @current.tMax = parsed["main"]["temp_max"]
-      @current.gndPres = parsed["main"]["sea_level"]
-      @current.condition = parsed["weather"].first["description"]
-      @current.windDir = parsed["coord"]["lon"]
-      @current.windSpd = parsed["coord"]["lon"]
-      @current.windDir = parsed["wind"]["deg"]
-      @current.windSpd = parsed["wind"]["speed"]
-      @current.sunUp = Time.at(parsed["sys"]["sunrise"])
-      @current.sunDown = Time.at(parsed["sys"]["sunset"])
-    
-=begin
+      location_name = parsed["name"]
+      report_time = Time.at(parsed["dt"])
+      temp = parsed["main"]["temp"]
+      lat = parsed["coord"]["lat"]
+      lon = parsed["coord"]["lon"]
+      tMin = parsed["main"]["temp_min"]
+      tMax = parsed["main"]["temp_max"]
+      gndPres = parsed["main"]["sea_level"]
+      condition = parsed["weather"].first["description"]
+      windDir = parsed["coord"]["lon"]
+      windSpd = parsed["coord"]["lon"]
+      windDir = parsed["wind"]["deg"]
+      windSpd = parsed["wind"]["speed"]
+      sunUp = Time.at(parsed["sys"]["sunrise"])
+      sunDown = Time.at(parsed["sys"]["sunset"])
 
-attr_accessor :cityState, :currentTemp, :condition, :tMin, :tMax, :reportTime, :groundPressureHPa,
-                    :windDirection, :windSpeed
-    Changed in design
-    def initialize(locName, time, temp, tMin, tMax, gndPres, condition, windDir, windSpd
-    
-=end
-
-      weatherObj = DailyBriefing::WeatherObject.new(@current.location_name, @current.report_time, @current.temp, @current.tMin, @current.tMax, 
-      @current.gndPres, @current.condition, @current.windDir, @current.windSpd, @current.sunUp, @current.sunDown)
+      ##### Current Weather information API retrieval
+      ##### Below is loading of forecast data from second API retrieval
+      responseForecast = HTTParty.get("https://api.openweathermap.org/data/2.5/forecast?zip=#{inputLocation}&appid=ffe7cb9143aff0778bf7788d0d2a3042&units=metric")
+      parsedForecast = responseForecast.parsed_response
+      
+      hr24_dt = parsedForecast["list"][0]["dt_txt"]
+      hr24_2_dt = parsedForecast["list"][4]["dt_txt"]
+      hr48_dt = parsedForecast["list"][8]["dt_txt"]
+      hr48_2_dt = parsedForecast["list"][12]["dt_txt"]
+      
+      temp24 = parsedForecast["list"][0]["main"]["temp"]
+      temp24_2 = parsedForecast["list"][4]["main"]["temp"]
+      temp48 = parsedForecast["list"][12]["main"]["temp"]
+      temp48_2 = parsedForecast["list"][16]["main"]["temp"]
+      con24 = parsedForecast["list"][0]["weather"][0]["description"].capitalize
+      con24_2 = parsedForecast["list"][4]["weather"][0]["description"].capitalize
+      con48 = parsedForecast["list"][12]["weather"][0]["description"].capitalize
+      con48_2 = parsedForecast["list"][16]["weather"][0]["description"].capitalize
+  
+      weatherObj = DailyBriefing::WeatherObject.new(location_name, report_time, temp, tMin, tMax, 
+      gndPres, condition, windDir, windSpd, sunUp, sunDown, hr24_dt, hr24_2_dt, hr48_dt, hr48_2_dt, temp24, temp24_2, temp48,
+      temp48_2, con24, con24_2, con48, con48_2)
       
       
     end
-    puts @current.location_name + " weather data retrieved. "
     return weatherObj
   end
 
-    def self.forecast(location)
-      
+    def self.forecast(location)  #method deprecated ?
+            
       response = HTTParty.get("https://api.openweathermap.org/data/2.5/forecast?zip=#{location}&appid=ffe7cb9143aff0778bf7788d0d2a3042&units=metric")
       parsed = response.parsed_response
-      
-      #(:loc, :con24, :con48, :con72, :tH24, :tH48, :tH72, :tL24, :tL48, :tL72)
       @current = self.new(location)
     
       loc = @current.location_name

@@ -1,46 +1,107 @@
 class DailyBriefing::CLI
-   
-    @@location = "00501"
-    @@input = ""
-
+    @@QUIT = nil
+    
     # 00501 (Holtsville NY River; IRS) - 99950 (Ketchikan, AK)
-
-    #attr_accessor  
     def call #so far this is effectively "main"
-      #puts "Welcome to the Greeting"
-      userLocationInput = start #this might make ruby vomit *EDIT* Ruby didn't vomit.  
-      @@location = userLocationInput
-      currentWeather = DailyBriefing::APIHandler.getWeatherDataByLocation(userLocationInput)
-      #current weather = send loc to api, and then receive a weather obj
-      dispBriefing(currentWeather)
-      secondMenu(@@location)
+      
+      while !@@QUIT do
+        @@userLocationInput = start #keyboard input
+        currentWeather = DailyBriefing::APIHandler.getWeatherDataByLocation(@@userLocationInput)
+        ## current weather = send loc to api, and then receive a weather obj
+        dispBriefing(currentWeather)
+        secondMenu(currentWeather)
+      end
     end
 
-    def start # returns the location
-      puts ""
+    def start # returns the location -> string, numerical, zip range. 
       puts ""
       puts ""
       puts "Welcome to DailyBriefing"
       puts ""
       puts ""
-      puts "Please enter your location - 5 digit US zip code."
-      
+      puts "Please enter your location - 5 digit US zip code only."
       return getUserLocation
-      
     end
 
-    def getUserLocation 
+    def getUserLocation ## This is better.  Does it memleak because it's recursive?   no, all the inputs should peel.
       puts ""
-      return gets.chomp #string 
-      # THIS IS BAD AND YOU KNOW BETTER
-      #
-      # Sanitize this input. 
+      input = gets.chomp
+      if  input.to_i >= 00501 && input.to_i <= 99950
+        return input
+      else
+        puts "Invalid -- Please follow provided simple instructions."
+        getUserLocation
+      end
     end
 
-      
-      
+   
+    
+    def secondMenu(currentWeather)
+        userInput = gets.chomp
+        if userInput == "1"
+          #get extended forecast, display extended forecast. 
+          forecast(currentWeather)
 
-=begin  
+        elsif userInput == "2"
+          puts "Thank you for trying my CLI application. "
+          @@QUIT = 1
+          return
+        elsif userInput == "3"
+          #call  # This does recursively cascade.  3, 2 requires TWO enters to get to command prompt.
+          # Effectively, this is nop(), and falls through to the while loop IN call.
+      end
+    end
+  
+  def dispBriefing(currentReport)
+    puts "-------------------------------------------------" #   x50
+    puts "|  Zip:  #{@@userLocationInput}                           " # | x48 spaces between |
+    puts "|  City: #{currentReport.cityState}              "
+    puts "|                                                "
+    puts "|  Temp ºC:  #{currentReport.currentTemp}  --  Low: #{currentReport.tMin}  --  High: #{currentReport.tMax} "
+    puts "|  Current condition:  #{currentReport.condition.capitalize}    "
+    puts "|"
+    puts "|  Wind: #{currentReport.windDirection}º #{currentReport.windSpeed} Kts. "
+    puts "|"
+    puts "|  Sunrise:  #{currentReport.sunUp}  "  
+    puts "|  Sunset:   #{currentReport.sunDown} "
+    puts "|                                                "
+    puts "|                                                "
+    puts "|                                                "
+    puts "| 1- Ext. Weather  |  2- Exit  |  3- Restart     "
+  end
+
+  def forecast(currentReport)
+    puts ""
+    puts "Extended Forecast -- 12Hr Blocks"
+    puts "-------------------------------------------------" #   x50
+    puts "#{currentReport.r24} -- Temp: #{currentReport.temp24}, Conditions: #{currentReport.con24}"
+    puts "#{currentReport.r24_2} -- Temp: #{currentReport.temp24_2}, Conditions: #{currentReport.con24_2}"
+    puts "#{currentReport.r48} -- Temp: #{currentReport.t48}, Conditions: #{currentReport.con48}"
+    puts "#{currentReport.r48_2} -- Temp: #{currentReport.t48_2}, Conditions: #{currentReport.con48_2}"
+    puts ""
+    puts ""
+    puts ""
+    puts ""
+    puts "| 1- Ext. Weather  |  2- Exit  |  3- Restart       "
+  end
+end
+
+=begin
+## Outside file. 
+
+
+mainLoop
+
+Is there a location? 
+No?  Get location
+Yes
+Display Briefing
+
+menu -> 
+1.  ext. forecast
+2.  Exit
+3.  change location
+  
     ## Execution process
 
     App Start
@@ -58,52 +119,4 @@ class DailyBriefing::CLI
 
     ## Basic Execution complete.  Modular design will allow additional packages to be added in. 
     
-=end    
-    def dispBriefing(currentReport)
-      #Temp line will need line padding math for different integers or single line view to keep box
-      #City can pull from the API data received
-      #Temps can be assembled into spaced strings. 
-      #binding.pry
-
-#  ::WeatherObject
-#  attr_accessor :cityState, :currentTemp, :tMin, :tMax, :reportTime, :groundPressureHPa
-
-      puts "-------------------------------------------------" #   x50
-      puts "|  Zip:  #{@@location}                           " # | x48 spaces between |
-      puts "|  City: #{currentReport.cityState}              "
-      puts "|                                                "
-      puts "|  Temp ºC:  #{currentReport.currentTemp}  --  Low: #{currentReport.tMin}  --  High: #{currentReport.tMax} "
-      puts "|  Current condition:  #{currentReport.condition.capitalize}    "
-      puts "|"
-      puts "|  Wind: #{currentReport.windDirection}º #{currentReport.windSpeed} Kts. "
-      puts "|"
-      puts "|  Sunrise:  #{currentReport.sunUp}  "  
-      puts "|  Sunset: #{currentReport.sunDown} "
-      puts "|                                                "
-      puts "|                                                "
-      puts "|                                                "
-      puts "| 1- Ext. Weather  |  2- Exit               "
-
-  
-    end
-
-    def secondMenu(l)
-      
-      userinput = ""
-      running = 1
-      while running != 0
-        userInput = gets.chomp
-        if userInput == "1"
-          #get extended forecast, display extended forecast. 
-          #puts "#{@@location}"
-          DailyBriefing::APIHandler.forecast(l)
-
-        elsif userInput == "2"
-          puts "Thank you for trying my CLI application. "
-          return
-        else
-          puts "Invalid input.  Try again. 1 or 2. "
-        end
-      end
-    end
-end
+=end 
