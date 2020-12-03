@@ -1,13 +1,20 @@
 class DailyBriefing::CLI
     @@QUIT = nil
-    
+    @@weatherReports = []
+
     # 00501 (Holtsville NY River; IRS) - 99950 (Ketchikan, AK)
     def call #so far this is effectively "main"
       
       while !@@QUIT do
-        @@userLocationInput = start #keyboard input
-        currentWeather = DailyBriefing::APIHandler.getWeatherDataByLocation(@@userLocationInput)
+        
+        start #keyboard input
+        currentWeather = nil
+        while !currentWeather do
+          @@userLocationInput = getUserLocation
+          currentWeather = DailyBriefing::APIHandler.getWeatherDataByLocation(@@userLocationInput)
+        end
         ## current weather = send loc to api, and then receive a weather obj
+        @@weatherReports.push(currentWeather)
         dispBriefing(currentWeather)
         secondMenu(currentWeather)
       end
@@ -20,7 +27,7 @@ class DailyBriefing::CLI
       puts ""
       puts ""
       puts "Please enter your location - 5 digit US zip code only."
-      return getUserLocation
+      return 
     end
 
     def getUserLocation ## This is better.  Does it memleak because it's recursive?   no, all the inputs should peel.
@@ -41,20 +48,23 @@ class DailyBriefing::CLI
         if userInput == "1"
           #get extended forecast, display extended forecast. 
           forecast(currentWeather)
-
+          return
         elsif userInput == "2"
           puts "Thank you for trying my CLI application. "
           @@QUIT = 1
           return
         elsif userInput == "3"
           #call  # This does recursively cascade.  3, 2 requires TWO enters to get to command prompt.
-          # Effectively, this is nop(), and falls through to the while loop IN call.
-      end
+          # FIX: Effectively, this is nop(), and falls through to the while loop IN call.
+          return
+        elsif userInput == '4'
+          printReports
+        end
     end
   
   def dispBriefing(currentReport)
     puts "-------------------------------------------------" #   x50
-    puts "|  Zip:  #{@@userLocationInput}                           " # | x48 spaces between |
+    puts "|  Zip:  #{currentReport.zipcode}                           " # | x48 spaces between |
     puts "|  City: #{currentReport.cityState}              "
     puts "|                                                "
     puts "|  Temp ºC:  #{currentReport.currentTemp}  --  Low: #{currentReport.tMin}  --  High: #{currentReport.tMax} "
@@ -68,6 +78,7 @@ class DailyBriefing::CLI
     puts "|                                                "
     puts "|                                                "
     puts "| 1- Ext. Weather  |  2- Exit  |  3- Restart     "
+    puts "| 4- All Reports     "
   end
 
   def forecast(currentReport)
@@ -83,6 +94,13 @@ class DailyBriefing::CLI
     puts ""
     puts ""
     puts "| 1- Ext. Weather  |  2- Exit  |  3- Restart       "
+  end
+
+  def printReports
+    @@weatherReports.each  do |r|
+      dispBriefing(r)
+      forecast(r)
+    end
   end
 end
 

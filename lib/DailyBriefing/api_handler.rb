@@ -6,10 +6,6 @@
 
 class DailyBriefing::APIHandler
     #attr_accessor :location
-    
-    def initialize(inputLocation)
-        @location = inputLocation
-    end
 
   def self.getWeatherDataByLocation(inputLocation) # receives location, sneds back weather object
     response = HTTParty.get("https://api.openweathermap.org/data/2.5/weather?zip=#{inputLocation}&appid=ffe7cb9143aff0778bf7788d0d2a3042&units=metric")
@@ -20,7 +16,7 @@ class DailyBriefing::APIHandler
 
     # Check for invalid entry
     if response_code === "404"
-      puts "\n\nInvalid location, please enter a valid location.\n\n"
+      puts "\n\n---- Location rejected by API - Error 404  ----- \n\n"
       return
     else
       # Assign attributes to current weather object
@@ -59,14 +55,17 @@ class DailyBriefing::APIHandler
       con48 = parsedForecast["list"][12]["weather"][0]["description"].capitalize
       con48_2 = parsedForecast["list"][16]["weather"][0]["description"].capitalize
   
-      weatherObj = DailyBriefing::WeatherObject.new(location_name, report_time, temp, tMin, tMax, 
+      weatherObj = DailyBriefing::WeatherObject.new(inputLocation, location_name, report_time, temp, tMin, tMax, 
       gndPres, condition, windDir, windSpd, sunUp, sunDown, hr24_dt, hr24_2_dt, hr48_dt, hr48_2_dt, temp24, temp24_2, temp48,
       temp48_2, con24, con24_2, con48, con48_2)
-      
-      
     end
     return weatherObj
   end
+=begin
+
+    DEPRECATED IN FERACTOR
+    THIS DOES NOT EXIST
+    Your princess is in another castle!
 
     def self.forecast(location)  #method deprecated ?
             
@@ -99,4 +98,5 @@ class DailyBriefing::APIHandler
     
 
     end
+=end
 end

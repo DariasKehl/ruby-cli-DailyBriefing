@@ -8,9 +8,6 @@ Yes -> Build CLI main output page.
 
 
 
-
-     
-
 On menu press - 1.  Weather  2.  News  3.  Astro, whatever--
 
 more information in page 2.  then any key returns to main

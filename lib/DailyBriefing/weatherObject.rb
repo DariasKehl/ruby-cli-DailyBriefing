@@ -1,10 +1,11 @@
 class DailyBriefing::WeatherObject
-    attr_accessor :cityState, :currentTemp, :condition, :tMin, :tMax, :reportTime, :groundPressureHPa,
+    attr_accessor :zipcode, :cityState, :currentTemp, :condition, :tMin, :tMax, :reportTime, :groundPressureHPa,
      :windDirection, :windSpeed, :sunUp, :sunDown, :r24, :r24_2, :temp24, :temp24_2, :con24, :con24_2, :r48, :r48_2, :t48, :t48_2, :con48, :con48_2
     
-    def initialize(locName, time, temp, tMin, tMax, gndPres, condition, windDir, windSpd, sunUp, sunDown, r24, r24_2,
+    def initialize(zipcode, locName, time, temp, tMin, tMax, gndPres, condition, windDir, windSpd, sunUp, sunDown, r24, r24_2,
         temp24, temp24_2, con24, con24_2, r48, r48_2, t48, t48_2, con48, con48_2
         )
+        @zipcode = zipcode
         @cityState = locName
         @currentTemp = temp
         @reportTime = time

@@ -1,24 +1,47 @@
-Hi Jeff! It was nice to meet you and I really enjoyed seeing your project. It is great that you built an app that will be useful to you one day when you have a boat! 
+Hi Jeff! It was nice to meet you and I really enjoyed seeing your project. 
+It is great that you built an app that will be useful to you one day when you have a boat! 
 
 Before you move onto the next module, there are some important concepts to nail down: 
 - The difference between a class and an instance 
 - The difference between class methods and instance methods 
 - The difference between class variables and instance variables 
 - Defining getters/setters manually (without attr_accessor) 
-- The value of self In addition, there are some conventions and OO best practices that are best to follow to keep your code organized and to optimize your application. 
+- The value of self In addition, there are some conventions and OO best practices that are best to follow to keep
+ your code organized and to optimize your application. 
 
-As we discussed, these changes do not mean altering the functionality of your project - you will be able to achieve the same outcome after these refactors: 
+As we discussed, these changes do not mean altering the functionality of your project - you will be able to achieve
+ the same outcome after these refactors: 
 
 We only want “puts” and “gets” in the CLI class 
 
-Your API class should only be in charge of making requests to the API - we do not want an instance of the API class to have attributes that should belong to a weather instance 
+Your API class should only be in charge of making requests to the API - we do not want an instance of the API class
+ to have attributes that should belong to a weather instance 
 
-After creating a weather instance, you will want to store that object in a class variable so that if a user requests the same location again, you do not need to make a second request to the API when you already have that weather data 
+After creating a weather instance, you will want to store that object in a class variable so that if a user requests
+ the same location again, you do not need to make a second request to the API when you already have that weather data 
 
 Make sure to incorporate error handling for if the user gives an invalid zip code 
 
 Make frequent commits with meaningful messages that explain the changes to your code 
 
-Please also be sure to add some technical content to your blog post - you can choose to focus on any concept that you encountered when building out your project! Here are some resources to help you better understand these concepts: All video lectures - https://instruction.learn.co/student/video_lectures#/ Intro to OO Ruby https://www.youtube.com/watch?v=Ai9ZALg-KZA&feature=youtu.be Object Initialization and Object Properties https://www.youtube.com/watch?v=CflKcHPDjMU&feature=youtu.be Object’s Self, Class Variables and Methods https://www.youtube.com/watch?v=xHNfMus6OuY&feature=youtu.be General OO Ruby - https://www.youtube.com/watch?v=Z_IoQCVNWtM - https://www.youtube.com/watch?v=ab11lJJKm8M - https://www.youtube.com/watch?v=UysgBTrJoTc Self - https://yehudakatz.com/2009/11/15/metaprogramming-in-ruby-its-all-about-the-self/ - https://www.youtube.com/watch?v=3CMEr2_zXCw - https://www.youtube.com/watch?v=82GI8GTtwmU - https://learn.co/tracks/online-software-engineering-structured/object-oriented-ruby/object-s-self/self Classes vs. Instances: - https://learn.co/tracks/online-software-engineering-structured/object-oriented-ruby/classes-and-instances/intro-to-classes-and-instances .new and #initialize: - https://learn.co/tracks/online-software-engineering-structured/object-oriented-ruby/object-lifecycle/object-initialization I hope these are useful in helping you review for your next assessment! 
+Please also be sure to add some technical content to your blog post - you can choose to focus on any concept 
+that you encountered when building out your project! Here are some resources to help you better understand 
+these concepts: 
+All video lectures - https://instruction.learn.co/student/video_lectures#/ 
+Intro to OO Ruby https://www.youtube.com/watch?v=Ai9ZALg-KZA&feature=youtu.be 
+Object Initialization and Object Properties https://www.youtube.com/watch?v=CflKcHPDjMU&feature=youtu.be 
+Object’s Self, Class Variables and Methods https://www.youtube.com/watch?v=xHNfMus6OuY&feature=youtu.be 
+General OO Ruby - https://www.youtube.com/watch?v=Z_IoQCVNWtM - 
+https://www.youtube.com/watch?v=ab11lJJKm8M - 
+https://www.youtube.com/watch?v=UysgBTrJoTc 
+Self - https://yehudakatz.com/2009/11/15/metaprogramming-in-ruby-its-all-about-the-self/ 
+- https://www.youtube.com/watch?v=3CMEr2_zXCw - https://www.youtube.com/watch?v=82GI8GTtwmU 
+- https://learn.co/tracks/online-software-engineering-structured/object-oriented-ruby/object-s-self/self 
+Classes vs. Instances: - https://learn.co/tracks/online-software-engineering-structured/object-oriented-ruby/classes-and-instances/intro-to-classes-and-instances 
+.new and #initialize: - https://learn.co/tracks/online-software-engineering-structured/object-oriented-ruby/object-lifecycle/object-initialization 
 
-As I mentioned in our meeting, you did a great job using the API and displaying useful and interesting information to the user! These changes are just about following OO best practices to make your application the best that it can be! Please reach out if you have any questions! Best, Annabel
+I hope these are useful in helping you review for your next assessment! 
+
+As I mentioned in our meeting, you did a great job using the API and displaying useful and interesting 
+information to the user! These changes are just about following OO best practices to make your application 
+the best that it can be! Please reach out if you have any questions! Best, Annabel
