@@ -40,8 +40,6 @@ class DailyBriefing::CLI
         getUserLocation
       end
     end
-
-   
     
     def secondMenu(currentWeather)
         userInput = gets.chomp
@@ -59,8 +57,11 @@ class DailyBriefing::CLI
           return
         elsif userInput == '4'
           printReports
-        end
-    end
+        elsif userInput == '5'
+        puts "EASTER EGG!"
+        printReportsInAlphOrder
+      end
+  end
   
   def dispBriefing(currentReport)
     puts "-------------------------------------------------" #   x50
@@ -78,7 +79,7 @@ class DailyBriefing::CLI
     puts "|                                                "
     puts "|                                                "
     puts "| 1- Ext. Weather  |  2- Exit  |  3- Restart     "
-    puts "| 4- All Reports     "
+    puts "| 4- All Reports |5- Alph. Reports  "
   end
 
   def forecast(currentReport)
@@ -100,6 +101,16 @@ class DailyBriefing::CLI
     @@weatherReports.each  do |r|
       dispBriefing(r)
       forecast(r)
+    end
+  end
+
+  def printReportsInAlphOrder
+    sortedArray = @@weatherReports.sort_by do |a|
+      a.cityState
+    end
+    sortedArray.each do |zxc| 
+      dispBriefing(zxc)
+      forecast(zxc)
     end
   end
 end
